@@ -1,3 +1,28 @@
+<?php
+session_start();
+
+include("includes/config.php");
+if(isset($_POST['submit']))
+{
+$ret=mysqli_query($con,"SELECT * FROM admin WHERE userEmail='".  $_POST['username']."' and password='".md5($_POST['password'])."'");
+$num=mysqli_fetch_array($ret);
+if($num>0)
+{
+$_SESSION['login']=$_POST['username'];
+$_SESSION['type']='admin';
+$_SESSION['id']=mysqli_query($con,"SELECT Adminid FROM admin WHERE userEmail='".$_POST['username']."' ");
+$status=1;
+header("location:http://localhost/Apartment_Management_System/admin/dashboard.php");
+exit();
+}
+else {
+$_SESSION['login']=$_POST['username'];
+$status=0;
+$errormsg="Invalid username or password";
+header("location:http://localhost/Apartment_Management_System/admin/adminlogin.php?errormsg=1");
+}
+}
+ ?>
 <?php include '../navbar.php';?>
 <html>
     <head>
@@ -135,18 +160,22 @@
        <div class="loginbox">
     <img src="../img/loginavatar2.png" class="avatar">
     <h1> <center>Admin</center> </h1><br>
-    <form>
+     <form class="login" name="login" method="post" autocomplete="off">
+      <?php if(isset($_GET['errormsg'])==true){
+echo '<span style="color:red;text-align:center;"><b>INVALID Username or PASSWORD</b></span>';
+//echo "<b color="red">INVALID Username or PASSWORD<b>";
+        }?>
     <div class="input">
-    <input type="text" placeholder="Enter Username" name="txtusername" >
+    <input type="email" placeholder="Enter Email  " name="username" >
     </div>
     <div class="input">
-    <input type="password" placeholder="Enter Password" name="txtpassword" >
+    <input type="password" placeholder="Enter Password" name="password" >
     </div>
-    <input type="submit" name="Submit" value="Login">
+    <input type="submit" name="submit" value="Login">
     <br>
     <br>
     <div class="forget">
-    <a href="#"><center>Forgot Password?<center></a>
+    <a href="http://localhost/Apartment_Management_System/admin/forgetpassword0.php"><center>Forgot Password?<center></a>
     </div>
     </form>
 

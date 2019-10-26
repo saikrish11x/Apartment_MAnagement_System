@@ -37,7 +37,7 @@
       text-decoration: none;
     }
     .nav-links{
-      display: flex;
+        display: flex;
       justify-content: space-around;
       width: 60%;
     }

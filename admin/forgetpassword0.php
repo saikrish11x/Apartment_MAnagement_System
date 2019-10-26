@@ -4,7 +4,7 @@ include("includes/config.php");
 if(isset($_POST['submit']))
 {
   $id= $_POST['username'];
-  $ret=mysqli_query($con,"SELECT * FROM user WHERE userEmail='$id'");
+  $ret=mysqli_query($con,"SELECT * FROM admin WHERE userEmail='$id'");
   $num=mysqli_fetch_array($ret);
 
 if($num>0)
@@ -33,7 +33,7 @@ if($num>0)
     echo 'Email is not sent.';
     echo 'Email error: ' . $mail->ErrorInfo;
   } else {
-    header("location:http://localhost/Apartment_Management_System/user/setpassword.php?userid=$id");
+    header("location:http://localhost/Apartment_Management_System/admin/setpassword.php?userid=$id");
   }
 }
 else{

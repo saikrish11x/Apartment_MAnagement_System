@@ -1,3 +1,32 @@
+<?php
+include("includes/config.php");
+if(isset($_POST['submit'])){
+$firstname=$_POST['first'];
+$lastname=$_POST['last'];
+$email=$_POST['email'];
+$password=md5($_POST['password']);
+$contact=$_POST['phno'];
+$block=$_POST['block'];
+$flatno=$_POST['flat'];
+$status=1;
+$check = mysqli_query($con,"SELECT userEmail FROM user WHERE userEmail='$email'");
+$count=mysqli_num_rows($check);
+if($count==0)
+  {
+
+    $insreg=mysqli_query($con,"INSERT INTO Registrationlog (firstName,LastName,userEmail,password,contactNo,Block,flatno,status) VALUES ('$firstname','$lastname','$email','$password','$contact','$block','$flatno','$status')");
+
+    echo "<script>alert('Your request is accepted.You will be notified when approved.'); windowlocation.href='http://localhost/Apartment_Management_System/'; </script>";
+    exit();
+}
+
+else{
+  echo "$count";
+  header("location:http://localhost/Apartment_Management_System/user/userregistration.php?errormsg=1");
+
+}
+}
+ ?>
 <?php include '../navbar.php';?>
 <!DOCTYPE html>
 <html>
@@ -26,11 +55,20 @@ body{
 h2{
      text-align:center;
 }
+select{
+  width:100%;
+  height: 50px;
+  background:rgba(222,207,206,0.10);
+  border-radius:15px;
+  color: white;
+  border:none;
+font-size: 20px;
+}
 input[type=text],input[type=password],input[type=email]{
         width:100%;
         box-sizing:border-box;
       padding:12px 5px;
-    background:rgba(222,207,206,0.10);
+      background:rgba(222,207,206,0.10);
       outline:none;
       border:none;
       text-align: center;
@@ -39,6 +77,12 @@ input[type=text],input[type=password],input[type=email]{
       border-radius:15px;
       margin:5px;
        font-weight:bold;
+       font-size: 20px;
+}
+
+option{
+    background:rgba(222,207,206,0.10);
+  color: black;
 }
 input[type=submit]{
      width:100%;
@@ -53,7 +97,7 @@ font-size:20px;
 color:#fff;
 cursor: pointer;
 }
-a, a:active, a:focus {
+a, a:active, a:focus ,select  {
    outline: none;
 }
 </style>
@@ -62,13 +106,24 @@ a, a:active, a:focus {
 <div class ="wrap">
     <h2> Sign up Here</h2>
     <br>
-    <form>
-        <input type ="text" placeholder ="First Name"required>
-        <input type ="text" placeholder ="Last Name"required>
-        <input type ="email" placeholder ="Email"required>
-        <input type ="text" placeholder ="Username"required>
-        <input type ="text" placeholder ="Password"required>
-        <input type ="submit" value="submit">
+    <form class="login" name="login" method="post" autocomplete="off">
+      <?php if(isset($_GET['errormsg'])==true){
+echo '<span style="color:red;text-align:center;"><b>User Already Exists</b></span>';
+        }?>
+        <input type ="text" name="first"  placeholder ="First Name"required>
+        <input type ="text" name="last" placeholder ="Last Name">
+        <input type ="email" name="email" placeholder ="Email"required>
+        <input type ="text" name="password" placeholder ="Password"required>
+        <input type ="text" name="phno" placeholder ="Contact No"required>
+        <select  name="block" placeholder ="Block">
+          <option>Choose Block</option>
+          <option value="A">Block A</option>
+          <option value="B">Block B</option>
+          <option value="C">Block C</option>
+          <option value="D">Block D</option>
+        </select>
+        <input type ="text" name="flat" placeholder ="Flat No"required>
+        <input type ="submit" name="submit" value="submit">
      </form>
 </div>
 </body>

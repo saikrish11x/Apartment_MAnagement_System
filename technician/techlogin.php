@@ -1,3 +1,27 @@
+<?php
+session_start();
+
+include("includes/config.php");
+if(isset($_POST['submit']))
+{
+$ret=mysqli_query($con,"SELECT * FROM technician WHERE userEmail='".  $_POST['username']."' and password='".md5($_POST['password'])."'");
+$num=mysqli_fetch_array($ret);
+if($num>0)
+{
+$_SESSION['login']=$_POST['username'];
+$_SESSION['id']=mysqli_query($con,"SELECT Techid FROM technician WHERE userEmail='".$_POST['username']."'  ");
+$status=1;
+header("location:http://localhost/Apartment_Management_System/technician/dashboard.php");
+exit();
+}
+else {
+$_SESSION['login']=$_POST['username'];
+$status=0;
+$errormsg="Invalid username or password";
+header("location:http://localhost/Apartment_Management_System/technician/techlogin.php?errormsg=1");
+}
+}
+ ?>
 <?php include '../navbar.php';?>
 <html>
     <head>
@@ -134,20 +158,28 @@
    </style>
      </head>
      <body>
+       <?php if(isset($_GET['no'])==true){
+   echo '<span style="color:red;text-align:center;"></center><b><h1>password sucessfully changed</h1></b></center></span>';
+   //echo "<b color="red">INVALID Username or PASSWORD<b>";
+         }?>
        <div class="loginbox">
     <img src="../img/tech.png" class="avatar" style="background-color:#33A4F7;">
     <h1> <center>Technician</center> </h1><br>
-    <form>
+    <form class="login" name="login" method="post" autocomplete="off">
+      <?php if(isset($_GET['errormsg'])==true){
+echo '<span style="color:red;text-align:center;"><b>INVALID Username or PASSWORD</b></span>';
+//echo "<b color="red">INVALID Username or PASSWORD<b>";
+        }?>
     <div class="input">
-    <input type="text" placeholder="Enter Username" name="txtusername" >
+    <input type="email" placeholder="Enter Email Id" name="username" >
     </div>
     <div class="input">
-    <input type="password" placeholder="Enter Password" name="txtpassword" >
+    <input type="password" placeholder="Enter Password" name="password" >
     </div>
     <br>
     <div class="forget">
-    <a href="http://localhost/Apartment_Management_System/technician/forgetpassword.php"><center>Forgot Password?<center></a>
-    <input type="submit" name="Submit" value="Login">
+    <a href="http://localhost/Apartment_Management_System/technician/forgetpassword0.php"><center>Forgot Password?<center></a>
+    <input type="submit" name="submit" value="Login">
     <br>
     <br>
 

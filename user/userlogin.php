@@ -1,3 +1,26 @@
+<?php
+session_start();
+include("includes/config.php");
+if(isset($_POST['submit']))
+{
+$ret=mysqli_query($con,"SELECT * FROM user WHERE userEmail='".  $_POST['username']."' and password='".md5($_POST['password'])."'");
+$num=mysqli_fetch_array($ret);
+if($num>0)
+{
+$_SESSION['login']=$_POST['username'];
+$_SESSION['id']=mysqli_query($con,"SELECT Userid FROM user WHERE userEmail='".$_POST['username']."'  ");
+$status=1;
+header("location:http://localhost/Apartment_Management_System/user/dashboard.php");
+exit();
+}
+else {
+$_SESSION['login']=$_POST['username'];
+$status=0;
+$errormsg="Invalid username or password";
+header("location:http://localhost/Apartment_Management_System/user/userlogin.php?errormsg=1");
+}
+}
+ ?>
 <?php include '../navbar.php';?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -83,13 +106,21 @@
   </head>
 
   <body>
+    <?php if(isset($_GET['no'])==true){
+echo '<span style="color:red;text-align:center;"></center><b><h1>password sucessfully changed</h1></b></center></span>';
+//echo "<b color="red">INVALID Username or PASSWORD<b>";
+      }?>
          <div class="container">
              <img src="../img/logo.jpeg" alt="AMS logo" >
 
          <form class="login" name="login" method="post" autocomplete="off">
-                 <label id="invalid" style="color:red;text-align: center;visibility: hidden;">INVALID ID or PASSWORD</label>
+                 <!--label id="invalid" style="color:red;text-align: center;visibility: hidden;">INVALID ID or PASSWORD</label-->
+		        	<?php if(isset($_GET['errormsg'])==true){
+echo '<span style="color:red;text-align:center;"><b>INVALID Username or PASSWORD</b></span>';
+//echo "<b color="red">INVALID Username or PASSWORD<b>";
+		        		}?>
              <div class="input">
-                 <input type="text" id="userid" name="userid" placeholder="Enter Username"/ required>
+                 <input type="email" id="userid" name="username" placeholder="Enter Email Id"/ required>
              </div>
              <div class="input">
                  <input type="password" id="password" name="password" placeholder="Enter password" required>
@@ -113,5 +144,4 @@
          </div>
 
   </body>
-
 </html>
